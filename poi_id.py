@@ -7,8 +7,7 @@ sys.path.append("tools/")
 
 from feature_format import featureFormat, targetFeatureSplit
 from tester import dump_classifier_and_data, test_classifier
-from explore_data import drawboxes,printresults,printhighnonPOIs,checktotals,graphstats,newfeaturelist
-from explore_data import finlistall,emaillist,update_data_errors,updatenulls,featureimportance
+from explore_data import *
 from feature_selection import new_features,test_kbest
 import numpy as np
 import pandas as pd
@@ -61,9 +60,7 @@ with open("final_project_dataset.pkl", "rb") as data_file:
     ### Store to my_dataset for easy export below.
     my_dataset = data_dict
 
-### Task : Feature Removal and Selection ( functions in feature_selection.py)
-
-#initial test commented out
+### Task
 data = featureFormat(my_dataset, feature_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
 old_data = featureFormat(my_dataset, old_feature_list, sort_keys = True)
