@@ -120,4 +120,4 @@ print '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ Voting Class
 print '\n',classification_report(ytest, y_pred)
 print '↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ Voting Classifier Performance ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑','\n\n' 
 
-dump_classifier_and_data(eclf, my_dataset, feature_list)
+dump_classifier_and_data(clf_v, my_dataset, feature_list)
