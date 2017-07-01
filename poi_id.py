@@ -57,12 +57,12 @@ with open("final_project_dataset.pkl", "rb") as data_file:
     ### Task : New features (functions in explore_data.py)
 
     #look at data graphically
-    finstats,poi_finstats = graphstats(data_dict,finlistall)
+    #finstats,poi_finstats = graphstats(data_dict,finlistall)
     #drawboxes(finstats,poi_finstats)
 
     data_dict = new_features(data_dict)
     #draw graphs for new features.
-    finstats,poi_finstats = graphstats(data_dict,newfeaturelist)
+    #finstats,poi_finstats = graphstats(data_dict,newfeaturelist)
     #drawboxes(finstats,poi_finstats)
 
     ### Store to my_dataset for easy export below.
@@ -86,10 +86,10 @@ from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
 
 ### Task : Model Selection
-clf_dt0 = DT(scaler, old_features, old_labels)
+'''clf_dt0 = DT(scaler, old_features, old_labels)
 clf_rf0 = RForest(scaler, old_features, old_labels)
 clf_gb0 = GradientBoost(scaler, old_features, old_labels)
-clf_ad0 = Ada(scaler, old_features, old_labels)
+clf_ad0 = Ada(scaler, old_features, old_labels)'''
 
 clf_dt = DT(scaler, features, labels)
 clf_rf = RForest(scaler, features, labels)
@@ -97,25 +97,26 @@ clf_gb = GradientBoost(scaler, features, labels)
 clf_ad = Ada(scaler, features, labels)
 ### Task : Algorithm Choice and Parameter Tuning (functions in algorithms.py)
 #uncomment the function calls below to test on each algorithm
-clf_d0 = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Decision Trees', clf_dt0 )])
+'''clf_d0 = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Decision Trees', clf_dt0 )])
 clf_r0 = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Random Forest', clf_rf0)])
 clf_g0 = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Gradient Boosting', clf_gb0 )])
-clf_a0 = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Ada Boosting', clf_ad0 )])
+clf_a0 = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Ada Boosting', clf_ad0 )])'''
 
 clf_d = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Decision Trees', clf_dt )])
 clf_r = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Random Forest', clf_rf)])
 clf_g = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Gradient Boosting', clf_gb )])
-clf_a = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Ada Boosting', clf_ad )])
+#clf_a = Pipeline(steps=[('Scaler',scaler), ('SKB', skb),('Ada Boosting', clf_ad )])
 from sklearn.ensemble import VotingClassifier
-eclf0 = VotingClassifier(estimators=[('rf', clf_r0), ('dt',clf_d0)], voting='soft')
-eclf = VotingClassifier(estimators=[('rf', clf_r), ('dt',clf_d),('gnb', clf_g),('ada',clf_a)], voting='soft')
+#eclf0 = VotingClassifier(estimators=[('rf', clf_r0), ('dt',clf_d0),('gnb', clf_g0)], voting='soft')
+eclf = VotingClassifier(estimators=[('rf', clf_r), ('dt',clf_d),('gnb', clf_g)], voting='soft')
 
 #Task 7: Cross Validation and Testing - using StratifiedShuffleSplit and report in tester.py (Udacity function)
-print '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ Original Features Performance ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓'
-test_classifier(eclf0,my_dataset,old_feature_list)
-print '↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ Original Features Performance ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ '
-print'\n\n\n', '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓New Features Performance ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓','\n\n'
-test_classifier(eclf,my_dataset,feature_list)
-print'\n\n\n', '↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ New Features Performance ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ '
+print '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ DT Performance ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓'
+test_classifier(clf_d ,my_dataset,feature_list)
+print '↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ DT Performance ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑','\n\n' 
+
+print '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ RF Performance ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓'
+test_classifier(clf_r ,my_dataset,feature_list)
+print '↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ RF Performance ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑','\n\n' 
 ### Task 6: Dump your classifier, dataset, and features_list
 dump_classifier_and_data(eclf, my_dataset, feature_list)
