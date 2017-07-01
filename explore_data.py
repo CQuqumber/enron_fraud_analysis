@@ -403,7 +403,7 @@ def featureimportance(data,feature_list):
     X_train = df.iloc[:,1:]
     y_train = df.iloc[:,0]
     feat_labels = np.array(feature_list)
-    forest = RandomForestClassifier(n_estimators=100,
+    forest = RandomForestClassifier(n_estimators=200,
                                     criterion = 'entropy',
                                     max_features = None,
                                     max_depth = 5,
