@@ -398,31 +398,39 @@ def odd_payments(data,poi,name):
     return odd
 
 def featureimportance(data,feature_list):
-    from sklearn.ensemble import RandomForestClassifier
-    df= pd.DataFrame(data)
-    X_train = df.iloc[:,1:]
-    y_train = df.iloc[:,0]
+
+    from feature_format import featureFormat, targetFeatureSplit
+    from sklearn.feature_selection import SelectKBest
+    from sklearn.feature_selection import VarianceThreshold
+    from sklearn.feature_selection import f_classif
+    import numpy as np
     feat_labels = np.array(feature_list)
-    forest = RandomForestClassifier(n_estimators=200,
-                                    criterion = 'entropy',
-                                    max_features = None,
-                                    max_depth = 5,
-                                    random_state=None,
-                                    n_jobs=-1)
 
-    forest.fit(X_train, y_train)
-    importances = forest.feature_importances_
+    y_train, X_train = targetFeatureSplit(data)
+    sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
+    features = sel.fit_transform(X_train)
 
-    indices = np.argsort(importances)[::-1]
-    print(X_train.shape[1])
-    plt.title('Feature Importances via Random Forest')
-    plt.bar(range(X_train.shape[1]), 
-            importances[indices],
-            color='lightblue', 
-            align='center')
+#Removes all but the k highest scoring features
 
-    plt.xticks(range(X_train.shape[1]), 
-               feat_labels[indices], rotation=90)
-    plt.xlim([-1, X_train.shape[1]])
-    plt.tight_layout()
+    k = 9
+    selector = SelectKBest(f_classif, k=k)
+    selector.fit_transform(X_train, y_train)
+    popularity_data = zip(feature_list[1:],selector.scores_)
+
+    popularity_data.sort(key=lambda x: x[1], reverse=True) 
+
+# save the names and their respective scores separately
+# reverse the tuples to go from most frequent to least frequent 
+    people = zip(*popularity_data)[0]
+    score = zip(*popularity_data)[1]
+    x_pos = np.arange(len(people)) 
+
+# calculate slope and intercept for the linear trend line
+    slope, intercept = np.polyfit(x_pos, score, 1)
+    trendline = intercept + (slope * x_pos)
+
+    plt.plot(x_pos, trendline, color='red', linestyle='--')    
+    plt.bar(x_pos, score,align='center')
+    plt.xticks(x_pos, people, rotation = 90) 
+    plt.ylabel('Popularity Score')
     plt.show()

@@ -98,9 +98,9 @@ clf_rf0 = RForest(scaler, old_features, old_labels)
 clf_gb0 = GradientBoost(scaler, old_features, old_labels)
 clf_ad0 = Ada(scaler, old_features, old_labels)'''
 
-clf_dt = DT(scaler, features, labels)
-clf_rf = RForest(scaler, features, labels)
-clf_gb = GradientBoost(scaler, features, labels)
+#clf_dt = DT(scaler, features, labels)
+#clf_rf = RForest(scaler, features, labels)
+#clf_gb = GradientBoost(scaler, features, labels)
 #clf_lg = Logit(scaler, features, labels)
 ### Task : Algorithm Choice and Parameter Tuning (functions in algorithms.py)
 #uncomment the function calls below to test on each algorithm
@@ -108,16 +108,21 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import VotingClassifier
 from sklearn.metrics import classification_report
 #eclf0 = VotingClassifier(estimators=[('rf', clf_r0), ('dt',clf_d0),('gnb', clf_g0)], voting='soft')
-clf_v = VotingClassifier(estimators=[('rf', clf_rf), ('dt',clf_dt),('gnb', clf_gb)], voting='soft')
+#clf_v = VotingClassifier(estimators=[('rf', clf_rf), ('dt',clf_dt),('gnb', clf_gb)], voting='soft')
 
-Xtrain, Xtest, ytrain, ytest = train_test_split( features, labels, test_size = 0.2, random_state = None)
-clf_v.fit(Xtrain, ytrain)
+from sklearn.naive_bayes import GaussianNB
+clf = GaussianNB()
 
-y_pred = clf_v.predict(Xtest)
+Xtrain, Xtest, ytrain, ytest = train_test_split( features, labels, test_size = 0.25, random_state = 42)
+clf.fit(Xtrain, ytrain)
+
+y_pred = clf.predict(Xtest)
 ### Task : Cross Validation and Testing - using StratifiedShuffleSplit and report in tester.py (Udacity function)
-print '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ Voting Classifier Performance ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓'
-#test_classifier(model  ,my_dataset,feature_list)
-print '\n',classification_report(ytest, y_pred)
-print '↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ Voting Classifier Performance ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑','\n\n' 
+print '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ test_classifier的表現 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓'
+test_classifier(clf  ,my_dataset,feature_list)
 
-dump_classifier_and_data(clf_v, my_dataset, feature_list)
+print '↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓使用這個庫from sklearn.metrics import classification_report↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓'
+print '\n',classification_report(ytest, y_pred)
+print '↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ 結論：殺雞焉用牛刀。↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑','\n\n' 
+
+dump_classifier_and_data(clf, my_dataset, feature_list)
